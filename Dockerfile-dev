@@ -1,0 +1,33 @@
+# ------------ Stage 1: Build using Maven ------------
+FROM 104824081961.dkr.ecr.ap-south-1.amazonaws.com/maven:3.9.6-eclipse-temurin-17 AS builder
+
+WORKDIR /app
+
+# Cache dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source and build
+COPY src ./src
+RUN mvn clean package 
+
+# ------------ Stage 2: Minimal Runtime Image ------------
+FROM 104824081961.dkr.ecr.ap-south-1.amazonaws.com/eclipse-temurin:17-jre-alpine
+
+# Install curl and create non-root user
+RUN apk add --no-cache curl && \
+    addgroup -S spring && adduser -S spring -G spring
+
+USER spring:spring
+WORKDIR /home/spring
+
+# Copy final JAR (already named app.jar due to <finalName>)
+COPY --chown=spring:spring --from=builder /app/target/app.jar app.jar
+
+# Health check endpoint
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+  CMD curl --silent --fail http://localhost:8080/demo || exit 1
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
