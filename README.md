@@ -1,6 +1,6 @@
-# Java WebApp – CI/CD with Jenkins, Docker, ECR, and GitOps
+## Java WebApp – CI/CD with Jenkins, Docker, ECR, and GitOps
 
-## 📌 Overview
+## Overview
 This project is a **Spring Boot web application** with a fully automated **CI/CD pipeline** built using **Jenkins**.  
 The pipeline ensures continuous integration, security scanning, and GitOps-based deployment into **Amazon EKS**.
 
