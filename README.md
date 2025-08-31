@@ -1,11 +1,21 @@
 ## DevSecOps CI/CD Pipeline with Jenkins, EKS, and GitOps
 
-## Overview
+![View Only](https://img.shields.io/badge/license-view--only-red)
+![Status](https://img.shields.io/badge/usage-portfolio%20only-blue)
+
+> ⚠️ **Notice:** This repository is made publicly available for **portfolio evaluation purposes only**.  
+> **You are not permitted to copy, reuse, distribute, or modify this code** in any form.  
+> All rights are reserved by the author. Please contact [Naveen R](naveenramlu28@gmail.com) for permission.
+
+---
+
+### Overview
+
 This project demonstrates a **complete DevSecOps pipeline** using Jenkins, AWS EKS, Amazon ECR, ArgoCD and AI-powered security reporting.  
 The pipeline ensures **code quality, SBOM generation, container security, supply chain integrity, and GitOps-driven deployment**.
 
 
-## Prerequisites
+### Prerequisites
 
 Ensure the following are installed and configured before running the pipeline:
 
@@ -25,7 +35,8 @@ Ensure the following are installed and configured before running the pipeline:
 
 ---
 
-## Tools & Technologies
+### Tools & Technologies
+
 - **CI/CD**: Jenkins Shared Libraries
 - **Build/Test**: Maven, JUnit, Jacoco
 - **Code Quality**: SonarQube
@@ -38,28 +49,28 @@ Ensure the following are installed and configured before running the pipeline:
 
 ---
 
-## How to Run
+### How to Run
 
-### Build locally
+#### Build locally
 ```bash
 mvn clean install
 ```
-### Run locally
+#### Run locally
 ```bash 
 mvn spring-boot:run
 ```
-### Run containerized
+#### Run containerized
 ```bash
 docker build -t java-webapp -f Dockerfile-dev .
 docker run -p 8080:8080 java-webapp
 ```
 
-### The application will be available at:
+#### The application will be available at:
 👉 http://localhost:8080
 
 ---
 
-## Pipeline Stages
+### Pipeline Stages
 
 The pipeline executes the following stages:
 
@@ -113,7 +124,7 @@ The pipeline executes the following stages:
 
 ---
 
-## Features
+### Features
 
 - Full CI/CD pipeline with **DevSecOps best practices**  
 - Automated **SBOM generation** & ingestion into Dependency Track  
@@ -122,3 +133,11 @@ The pipeline executes the following stages:
 - **GitOps-based deployment** with ArgoCD/FluxCD  
 - **AI-powered HTML report** summarizing all scan results 
 
+--- 
+
+### License
+
+This project is provided under a **view-only** license for review and portfolio purposes.  
+See the [LICENSE](./LICENSE) file for details.
+
+---
