@@ -21,7 +21,7 @@ pipeline {
         DEPENDENCY_TRACK_URL = 'http://13.233.116.134:8081/api/v1/bom'
         SONAR_HOST = "http://13.233.116.134:9000"
         SONAR_PROJECT_KEY = 'Java-App'
-        COSIGN_PASSWORD = 'admin123'
+        COSIGN_PASSWORD = credentials('cosign-pwd')
     }
 
     tools {
@@ -225,19 +225,19 @@ pipeline {
             }
         }
 
-        stage('Confirm YAML Update') {
+        stage('Approve Image Tag Update for ArgoCD') {
             steps {
                 script {
                     def approver = confirmYamlUpdate()
-                    echo "YAML update approved by: ${approver}"
+                    echo "Approved by: ${approver}"
                 }
             }
         }
 
-        stage('Update Deployment Files') {
+        stage('Update Image Tag') {
             steps {
                 script {
-                    echo "Updating deployment"
+                    echo "Updating Image Tag"
                     updateImageTag(
                         imageTag: env.COMMIT_SHA,
                         ecrRepoName: params.ECR_REPO_NAME,
@@ -250,9 +250,9 @@ pipeline {
             }
         }
 
-        stage('Deploy App') {
+        stage('Publish Artifact to Nexus') {
             steps {
-                echo "Deploying application..."
+                echo "Deploying artifact to Nexus..."
                 deployApp()
             }
         }
