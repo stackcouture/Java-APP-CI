@@ -1,4 +1,4 @@
-## DevSecOps CI/CD Pipeline with Jenkins, EKS, and GitOps
+### DevSecOps CI Pipeline with Jenkins
 
 ![View Only](https://img.shields.io/badge/license-view--only-red)
 ![Status](https://img.shields.io/badge/usage-portfolio%20only-blue)
