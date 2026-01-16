@@ -14,6 +14,12 @@
 The pipeline ensures **code quality, SBOM generation, container security, supply chain integrity, and GitOps-driven deployment**.
 
 ---
+
+## Demo Flow
+
+![Demo GIF](https://github.com/stackcouture/devsecops-gitops-automation/raw/main/demos/jenkins-ci.gif)
+
+---
 ### Prerequisites
 
 Ensure the following are installed and configured before running the pipeline:
@@ -31,11 +37,6 @@ Ensure the following are installed and configured before running the pipeline:
 - **SonarQube** server (running & accessible from Jenkins)  
 - **Dependency Track** server (for SBOM ingestion)  
 - **Cosign** installed on Jenkins agents  
-
----
-
-## Demo Flow
-![Demo GIF](../demos/jenkins-ci.gif)
 
 ---
 
