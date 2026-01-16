@@ -35,7 +35,7 @@ Ensure the following are installed and configured before running the pipeline:
 ---
 
 ## Demo Flow
-![Demo GIF](demos/jenkins-ci)
+![Demo GIF](demos/jenkins-ci.gif)
 
 ---
 
