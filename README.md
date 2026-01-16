@@ -3,15 +3,11 @@
 ![View Only](https://img.shields.io/badge/license-view--only-red)
 ![Status](https://img.shields.io/badge/usage-portfolio%20only-blue)
 
-> ⚠️ **Notice:** This repository is made publicly available for **portfolio evaluation purposes only**.  
-> **You are not permitted to copy, reuse, distribute, or modify this code** in any form.  
-> All rights are reserved by the author. Please contact [Naveen R](naveenramlu28@gmail.com) for permission.
-
 ---
 
 ### Overview
 
-The pipeline ensures **code quality, SBOM generation, container security, supply chain integrity, and GitOps-driven deployment**.
+The pipeline ensures **code quality, SBOM generation, container security, supply chain integrity and GitOps-driven deployment**.
 
 ---
 
