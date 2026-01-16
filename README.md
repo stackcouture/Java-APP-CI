@@ -11,10 +11,9 @@
 
 ### Overview
 
-This project demonstrates a **complete DevSecOps pipeline** using Jenkins, AWS EKS, Amazon ECR, ArgoCD and AI-powered security reporting.  
 The pipeline ensures **code quality, SBOM generation, container security, supply chain integrity, and GitOps-driven deployment**.
 
-
+---
 ### Prerequisites
 
 Ensure the following are installed and configured before running the pipeline:
@@ -32,6 +31,11 @@ Ensure the following are installed and configured before running the pipeline:
 - **SonarQube** server (running & accessible from Jenkins)  
 - **Dependency Track** server (for SBOM ingestion)  
 - **Cosign** installed on Jenkins agents  
+
+---
+
+## Demo Flow
+![Demo GIF](demos/jenkins-ci)
 
 ---
 
