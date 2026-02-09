@@ -169,6 +169,30 @@ pipeline {
                         region: "${env.REGION}",
                         secretName: 'my-app/secrets'
                     )
+
+                    def digest = getImageDigest(
+                        ecrRepoName: params.ECR_REPO_NAME,
+                        imageTag: env.COMMIT_SHA,
+                        region: env.REGION
+                    )                    
+                    env.IMAGE_DIGEST = digest
+                }
+            }
+        }
+
+        stage('Generate Provenance (SLSA)') {
+            steps {
+                script {
+                    def provenance = [
+                        buildType: "jenkins",
+                        repo: env.GIT_URL,
+                        commit: env.COMMIT_SHA,
+                        image: "${params.ECR_REPO_NAME}@${env.IMAGE_DIGEST}",
+                        buildNumber: env.BUILD_NUMBER,
+                        timestamp: new Date().toString()
+                    ]
+                    writeFile file: 'provenance.json', text: JsonOutput.toJson(provenance)
+                    archiveArtifacts artifacts: 'provenance.json'
                 }
             }
         }
@@ -191,6 +215,13 @@ pipeline {
                         region: env.REGION
                     )                    
                     env.IMAGE_DIGEST = digest
+
+                    sh """
+                    cosign attest \
+                      --predicate provenance.json \
+                      --type slsaprovenance \
+                      ${params.ECR_REPO_NAME}@${env.IMAGE_DIGEST}
+                    """
                 }
             }
         }
@@ -225,14 +256,23 @@ pipeline {
             }
         }
 
-        stage('Approve Image Tag Update for ArgoCD') {
+        stage('Verify Signature') {
             steps {
-                script {
-                    def approver = confirmYamlUpdate()
-                    echo "Approved by: ${approver}"
-                }
+                sh """
+                cosign verify ${env.IMAGE_REPO}@${env.IMAGE_DIGEST}
+                cosign verify-attestation --type slsaprovenance ${env.IMAGE_REPO}@${env.IMAGE_DIGEST}
+                """
             }
         }
+
+        // stage('Approve Image Tag Update for ArgoCD') {
+        //     steps {
+        //         script {
+        //             def approver = confirmYamlUpdate()
+        //             echo "Approved by: ${approver}"
+        //         }
+        //     }
+        // }
 
         stage('Update Image Tag') {
             steps {
@@ -257,31 +297,31 @@ pipeline {
             }
         }
 
-        stage('Generate GPT Security Report') {
-            steps {
-                script {
+        // stage('Generate GPT Security Report') {
+        //     steps {
+        //         script {
 
-                    def trivyHtmlPath = "reports/trivy/${env.BUILD_NUMBER}/after-push/trivy-image-scan-${env.COMMIT_SHA}.html"
-                    def snykJsonPath = "reports/snyk/${env.BUILD_NUMBER}/after-push/snyk-report-${env.COMMIT_SHA}.json"
+        //             def trivyHtmlPath = "reports/trivy/${env.BUILD_NUMBER}/after-push/trivy-image-scan-${env.COMMIT_SHA}.html"
+        //             def snykJsonPath = "reports/snyk/${env.BUILD_NUMBER}/after-push/snyk-report-${env.COMMIT_SHA}.json"
 
-                    if (fileExists(trivyHtmlPath) && fileExists(snykJsonPath)) {
-                        echo "Generating GPT security report..."
-                        runGptSecuritySummary(
-                            projectKey: env.SONAR_PROJECT_KEY, 
-                            gitSha: "${env.COMMIT_SHA}",
-                            buildNumber: "${env.BUILD_NUMBER}",
-                            trivyHtmlPath: trivyHtmlPath,
-                            snykJsonPath: snykJsonPath,
-                            sonarHost: "${env.SONAR_HOST}",
-                            secretName: 'my-app/secrets'
-                        )
+        //             if (fileExists(trivyHtmlPath) && fileExists(snykJsonPath)) {
+        //                 echo "Generating GPT security report..."
+        //                 runGptSecuritySummary(
+        //                     projectKey: env.SONAR_PROJECT_KEY, 
+        //                     gitSha: "${env.COMMIT_SHA}",
+        //                     buildNumber: "${env.BUILD_NUMBER}",
+        //                     trivyHtmlPath: trivyHtmlPath,
+        //                     snykJsonPath: snykJsonPath,
+        //                     sonarHost: "${env.SONAR_HOST}",
+        //                     secretName: 'my-app/secrets'
+        //                 )
 
-                    } else {
-                        error("Missing scan reports.")
-                    }
-                }   
-            } 
-        }
+        //             } else {
+        //                 error("Missing scan reports.")
+        //             }
+        //         }   
+        //     } 
+        // }
 
         stage('Cleanup') {
             steps {
